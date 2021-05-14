@@ -46,8 +46,6 @@ dependencies {
     // TEST
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'                    // EPL v2.0
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    
-    testImplementation group: 'org.e2immu', name: 'analyser', version: '0.2.0'      // LGPL 3.0
 }
 
 test {
@@ -55,13 +53,10 @@ test {
 }
 
 e2immu {
-    debug = "OUTPUT" //INSPECT,BYTECODE_INSPECTOR,ANALYSER,DELAYED"
-    jmods = 'java.base.jmod,java.logging.jmod'
-    sourcePackages = "org.e2immu.kvstore"
-    readAnnotatedAPIPackages = "org.e2immu.kvstoreaapi"
-    writeAnnotationXML = true
-    writeAnnotationXMLPackages = "org.e2immu."
-    upload = true
+    sourceSets.main.java.srcDirs = ['build/generated/sources/annotationProcessor/java/main','src/main/java']
+    debug = "OUTPUT,INSPECTOR,BYTECODE_INSPECTOR,ANALYSER,DELAYED"
+    jmods = 'java.base.jmod,java.compiler.jmod'
+    sourcePackages = "org.e2immu.example.immutables."
 }
 
 publishing {
@@ -69,7 +64,7 @@ publishing {
         mavenLocal()
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/e2immu/e2immu-annotation-store")
+            url = uri("https://maven.pkg.github.com/e2immu/example-immutables")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
@@ -79,7 +74,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             groupId = 'org.e2immu'
-            artifactId = 'e2immu-annotation-store'
+            artifactId = 'example-immutables'
             from components.java
         }
     }
